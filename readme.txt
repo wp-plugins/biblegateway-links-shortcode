@@ -32,6 +32,11 @@ Shortcode for linking Bible references to a BibleGateway page. Links open in a s
 = ?? =
 * If you run into a problem or have a question, contact me ([contact form](http://j.ustin.co/scbo43) or [@jtsternberg on twitter](http://j.ustin.co/wUfBD3)). I'll add them here.
 
+== Screenshots ==
+
+1. 1) Highlight reference, 2) Optionally enter alternate text for display, 3) OK!
+2. 1) Place cursor where you want the reference, 2) Enter reference, 3) Optionally enter alternate text for display, 3) OK!
+
 == Changelog ==
 
 = 0.1.0 =
