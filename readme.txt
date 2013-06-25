@@ -4,7 +4,7 @@ BibleGateway Links Shortcode
 Contributors: jtsternberg
 Plugin Name: BibleGateway Links Shortcode
 Plugin URI: http://dsgnwrks.pro/plugins/biblegateway-search-shortcode
-Tags: shortcode, bible, biblegateway, editor button
+Tags: shortcode, bible, biblegateway, editor, button, scripture, reference, search
 Author URI: http://about.me/jtsternberg
 Author: Jtsternberg
 Donate link: http://j.ustin.co/rYL89n
