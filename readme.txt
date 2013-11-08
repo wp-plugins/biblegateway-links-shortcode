@@ -33,7 +33,7 @@ Shortcode for linking Bible references to a BibleGateway page. Links open in a s
 * If you run into a problem or have a question, contact me ([contact form](http://j.ustin.co/scbo43) or [@jtsternberg on twitter](http://j.ustin.co/wUfBD3)). I'll add them here.
 
 * To use YouVersion instead of BibleGateway, you can add this filter:
-`php
+```php
 add_filter( 'dsgnwrks_bible_service', 'dsgnwrks_use_youversion' );
 function dsgnwrks_use_youversion() {
 	return 'youversion';
