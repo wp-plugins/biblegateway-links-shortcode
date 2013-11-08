@@ -10,8 +10,8 @@ Author: Jtsternberg
 Donate link: http://j.ustin.co/rYL89n
 Requires at least: 3.2
 Tested up to: 3.6
-Stable tag: 0.1.1
-Version: 0.1.1
+Stable tag: 0.1.2
+Version: 0.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,6 +39,13 @@ function dsgnwrks_use_youversion() {
 	return 'youversion';
 }
 `
+* To use English Standard Version instead of NIV, you can add this filter:
+`
+apply_filters( 'dsgnwrks_bible_version', 'dsgnwrks_use_version_kjv' )
+function dsgnwrks_use_version_kjv() {
+	return 'kjv';
+}
+`
 
 == Screenshots ==
 
@@ -46,6 +53,9 @@ function dsgnwrks_use_youversion() {
 2. 1) Place cursor where you want the reference, 2) Enter reference, 3) Optionally enter alternate text for display, 3) OK!
 
 == Changelog ==
+
+= 0.1.2 =
+* Added a filter to be able to change the Bible version. It defaults to NIV.
 
 = 0.1.1 =
 * Add filters to be able to change the Bible service and Bible service url. A YouVersion service is built in, but Bible Gateway is the default.
@@ -55,6 +65,9 @@ function dsgnwrks_use_youversion() {
 
 
 == Upgrade Notice ==
+
+= 0.1.2 =
+* Added a filter to be able to change the Bible version. It defaults to NIV.
 
 = 0.1.1 =
 * Add filters to be able to change the Bible service and Bible service url. A YouVersion service is built in, but Bible Gateway is the default.
