@@ -6,57 +6,75 @@ Description: Shortcode for linking Bible references to a BibleGateway page. Link
 Author URI: http://dsgnwrks.pro
 Author: Justin Sternberg
 Donate link: http://dsgnwrks.pro/give/
-Version: 0.1.0
+Version: 0.1.1
 */
 
 class DsgnWrks_Bible_Gateway_Shortcode {
 
-    public $btn = 'bgbible';
+	public $btn             = 'bgbible';
+	public static $services = array(
+		'biblegateway' => 'http://biblegateway.com/passage/?search=%s&version=NIV',
+		'youversion'   => 'https://www.bible.com/search?q=%s.niv',
+	);
+	public static $url_pattern = false;
 
-    public function __construct() {
-        add_action( 'admin_init', array( $this, 'init' )  );
-        add_action( 'admin_footer', array( $this, 'quicktag_button_script' )  );
-        add_action( 'admin_enqueue_scripts', array( $this, 'tinymce_button_script' )  );
-        add_shortcode( 'biblegateway', array( $this, 'bgsearch' )  );
-    }
+	public function __construct() {
+		add_action( 'admin_init', array( $this, 'init' ) );
+		add_action( 'admin_footer', array( $this, 'quicktag_button_script' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'tinymce_button_script' ) );
+		add_shortcode( 'biblegateway', array( $this, 'bgsearch' ) );
+	}
 
-    public function init() {
-        add_filter( 'mce_external_plugins', array( $this, 'add_buttons' )  );
-        add_filter( 'mce_buttons', array( $this, 'register_buttons' )  );
-    }
+	public function init() {
+		add_filter( 'mce_external_plugins', array( $this, 'add_buttons' ) );
+		add_filter( 'mce_buttons', array( $this, 'register_buttons' ) );
+	}
 
-    public function add_buttons( $plugin_array ) {
-        $plugin_array[$this->btn] = plugins_url( '/register-bg.js', __FILE__ );
-        return $plugin_array;
-    }
+	public function add_buttons( $plugin_array ) {
+		$plugin_array[$this->btn] = plugins_url( '/register-bg.js', __FILE__ );
+		return $plugin_array;
+	}
 
-    public function register_buttons( $buttons ) {
-        array_push( $buttons, $this->btn );
-        return $buttons;
-    }
+	public function register_buttons( $buttons ) {
+		array_push( $buttons, $this->btn );
+		return $buttons;
+	}
 
-    public function quicktag_button_script() {
-        $current = get_current_screen();
+	public function quicktag_button_script() {
+		$current = get_current_screen();
 
-        if ( !isset( $current->parent_base ) || $current->parent_base != 'edit' )
-            return;
-        wp_enqueue_script( $this->btn );
-    }
+		if ( !isset( $current->parent_base ) || $current->parent_base != 'edit' )
+			return;
+		wp_enqueue_script( $this->btn );
+	}
 
-    public function tinymce_button_script() {
-        wp_register_script( $this->btn, plugins_url( '/register-bg-html.js', __FILE__ ) , array( 'quicktags' ), '0.1.0', true );
-        wp_localize_script( $this->btn, $this->btn, array(
-            'passage_text' => __( 'Scripture Reference:', 'bgbible' ),
-            'display_text' => __( 'Optional replacement display text (i.e. "vs. 22"):', 'bgbible' ),
-        ) );
-    }
+	public function tinymce_button_script() {
+		wp_register_script( $this->btn, plugins_url( '/register-bg-html.js', __FILE__ ) , array( 'quicktags' ), '0.1.0', true );
+		wp_localize_script( $this->btn, $this->btn, array(
+			'passage_text' => __( 'Scripture Reference:', 'bgbible' ),
+			'display_text' => __( 'Optional replacement display text (i.e. "vs. 22"):', 'bgbible' ),
+		) );
+	}
 
-    public static function bgsearch( $attr ) {
-        if ( !isset( $attr['passage'] ) )
-            return;
+	public static function service() {
+		if ( self::$url_pattern !== false )
+			return self::$url_pattern;
 
-        $display = isset( $attr['display'] ) ? $attr['display'] : $attr['passage'];
-        return '<a class="bible-gateway" href="http://biblegateway.com/passage/?search='. urlencode( $attr['passage'] ) .'&version=NIV" onclick="return !window.open(this.href, \''. esc_js( $attr['passage'] ) .'\', \'width=800,height=950\')" target="_blank">'. esc_html( $display ) .'</a>';
-    }
+		// Allow plugins/themes to override the service
+		$service = apply_filters( 'dsgnwrks_bible_service', 'biblegateway', self::$services );
+		// Allow plugins/themes to override/add with their own service url patterns
+		self::$url_pattern = apply_filters( 'dsgnwrks_bible_service_url_pattern', self::$services[ $service ], $service, self::$services );
+		return self::$url_pattern;
+	}
+
+	public static function bgsearch( $attr ) {
+		if ( !isset( $attr['passage'] ) )
+			return;
+
+		$query = urlencode( $attr['passage'] );
+		$search = sprintf( self::service(), $query );
+		$display = isset( $attr['display'] ) ? $attr['display'] : $attr['passage'];
+		return sprintf( '<a class="bible-gateway" href="%s" onclick="return !window.open(this.href, \'%s\', \'width=925,height=950\')" target="_blank">%s</a>', $search, esc_js( $attr['passage'] ), esc_html( $display ) );
+	}
 }
 new DsgnWrks_Bible_Gateway_Shortcode();

@@ -10,8 +10,8 @@ Author: Jtsternberg
 Donate link: http://j.ustin.co/rYL89n
 Requires at least: 3.2
 Tested up to: 3.6
-Stable tag: 0.1.0
-Version: 0.1.0
+Stable tag: 0.1.1
+Version: 0.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,11 +39,17 @@ Shortcode for linking Bible references to a BibleGateway page. Links open in a s
 
 == Changelog ==
 
+= 0.1.1 =
+* Add filters to be able to change the Bible service and Bible service url.
+
 = 0.1.0 =
 * Launch.
 
 
 == Upgrade Notice ==
+
+= 0.1.1 =
+* Add filters to be able to change the Bible service and Bible service url.
 
 = 0.1.0 =
 * Launch.
