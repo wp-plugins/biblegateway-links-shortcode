@@ -4,7 +4,7 @@ BibleGateway Links Shortcode
 Contributors: jtsternberg
 Plugin Name: BibleGateway Links Shortcode
 Plugin URI: http://dsgnwrks.pro/plugins/biblegateway-search-shortcode
-Tags: shortcode, bible, biblegateway, editor, button, scripture, reference, search
+Tags: shortcode, bible, biblegateway, editor, button, scripture, reference, search, youversion
 Author URI: http://about.me/jtsternberg
 Author: Jtsternberg
 Donate link: http://j.ustin.co/rYL89n
@@ -32,6 +32,14 @@ Shortcode for linking Bible references to a BibleGateway page. Links open in a s
 = ?? =
 * If you run into a problem or have a question, contact me ([contact form](http://j.ustin.co/scbo43) or [@jtsternberg on twitter](http://j.ustin.co/wUfBD3)). I'll add them here.
 
+* To use YouVersion instead of BibleGateway, you can add this filter:
+`php
+add_filter( 'dsgnwrks_bible_service', 'dsgnwrks_use_youversion' );
+function dsgnwrks_use_youversion() {
+	return 'youversion';
+}
+```
+
 == Screenshots ==
 
 1. 1) Highlight reference, 2) Optionally enter alternate text for display, 3) OK!
@@ -40,7 +48,7 @@ Shortcode for linking Bible references to a BibleGateway page. Links open in a s
 == Changelog ==
 
 = 0.1.1 =
-* Add filters to be able to change the Bible service and Bible service url.
+* Add filters to be able to change the Bible service and Bible service url. A YouVersion service is built in, but Bible Gateway is the default.
 
 = 0.1.0 =
 * Launch.
@@ -49,7 +57,7 @@ Shortcode for linking Bible references to a BibleGateway page. Links open in a s
 == Upgrade Notice ==
 
 = 0.1.1 =
-* Add filters to be able to change the Bible service and Bible service url.
+* Add filters to be able to change the Bible service and Bible service url. A YouVersion service is built in, but Bible Gateway is the default.
 
 = 0.1.0 =
 * Launch.
