@@ -6,7 +6,7 @@ Description: Shortcode for linking Bible references to a BibleGateway page. Link
 Author URI: http://dsgnwrks.pro
 Author: Justin Sternberg
 Donate link: http://dsgnwrks.pro/give/
-Version: 0.1.2
+Version: 0.1.4
 */
 
 class DsgnWrks_Bible_Gateway_Shortcode {
@@ -16,20 +16,22 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 	public static $version     = 'niv';
 	public static $opts        = array();
 	public static $url_pattern = false;
+	public static $js_included = false;
 	public static $services    = array(
 		'biblegateway' => array(
 			'pattern' => 'http://biblegateway.com/passage/?search=%s&version=%s',
 			'name'    => 'BibleGateway',
-			'size'    => 'width=800,height=950',
+			'size'    => array( 800, 950 ),
 		),
 		'mobilebiblegateway' => array(
 			'pattern' => 'http://mobile.biblegateway.com/passage/?search=%s&version=%s',
 			'name'    => 'Mobile BibleGateway',
-			'size'    => 'width=600,height=750',
+			'size'    => array( 600, 750 ),
 		),
 		'youversion'   => array(
 			'pattern' => 'https://www.bible.com/search?q=%s.%s',
 			'name'    => 'YouVersion',
+			'size'    => array( 700, 600 ),
 		),
 	);
 	public static $versions    = array(
@@ -184,13 +186,29 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 		if ( !isset( $attr['passage'] ) )
 			return;
 
+		if ( self::$js_included !== true )
+			add_action( 'wp_footer', array( __CLASS__, 'popupjs' ) );
+
 		$size = isset( self::$services[ self::opts( 'service' ) ]['size'] )
 			? self::$services[ self::opts( 'service' ) ]['size']
-			: 'width=925,height=950';
+			: array( 925, 950 );
 		$query = urlencode( $attr['passage'] );
 		$search = sprintf( self::service_link(), $query, self::version() );
 		$display = isset( $attr['display'] ) ? $attr['display'] : $attr['passage'];
-		return sprintf( '<a class="bible-gateway" href="%s" onclick="return !window.open(this.href, \'%s\', \'%s\')" target="_blank">%s</a>', $search, esc_js( $attr['passage'] ), $size, esc_html( $display ) );
+		return sprintf( '<a class="bible-gateway" href="%1$s" onclick="biblegwlinkpop(this.href,\'%2$s\',%3$s,%4$s)"" target="_blank">%5$s</a>', $search, esc_js( $attr['passage'] ), $size[0], $size[1], esc_html( $display ) );
+
 	}
+
+	public static function popupjs() {
+		?>
+		<script type="text/javascript">
+		function biblegwlinkpop(url, title, w, h) {
+			var left = (window.innerWidth/2)-(w/2); var top = (window.innerHeight/2)-(h/2);
+			return window.open(url, title, 'width='+w+',height='+h+',top='+top+',left='+left); }
+		</script>
+		<?php
+		self::$js_included = true;
+	}
+
 }
 new DsgnWrks_Bible_Gateway_Shortcode();
