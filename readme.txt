@@ -10,8 +10,8 @@ Author: Jtsternberg
 Donate link: http://j.ustin.co/rYL89n
 Requires at least: 3.2
 Tested up to: 3.6
-Stable tag: 0.1.3
-Version: 0.1.3
+Stable tag: 0.1.4
+Version: 0.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ function dsgnwrks_use_version_kjv() {
 
 == Changelog ==
 
+= 0.1.4 =
+* Popup window is centered and YouVersion window is smaller (formatting is better).
+
 = 0.1.3 =
 * Now with settings page to set Bible version and Bible search service. Both can be overridden with filters.
 
@@ -70,6 +73,9 @@ function dsgnwrks_use_version_kjv() {
 
 
 == Upgrade Notice ==
+
+= 0.1.4 =
+* Popup window is centered and YouVersion window is smaller (formatting is better).
 
 = 0.1.3 =
 * Now with settings page to set Bible version and Bible search service. Both can be overridden with filters.
