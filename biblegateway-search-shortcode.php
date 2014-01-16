@@ -6,7 +6,7 @@ Description: Shortcode for linking Bible references to a BibleGateway page. Link
 Author URI: http://dsgnwrks.pro
 Author: Justin Sternberg
 Donate link: http://dsgnwrks.pro/give/
-Version: 0.1.4
+Version: 0.1.5
 */
 
 class DsgnWrks_Bible_Gateway_Shortcode {
