@@ -31,7 +31,7 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 		'youversion'   => array(
 			'pattern' => 'https://www.bible.com/search?q=%s.%s',
 			'name'    => 'YouVersion',
-			'size'    => array( 700, 600 ),
+			'size'    => array( 900, 600 ),
 		),
 	);
 	public static $versions    = array(
@@ -132,7 +132,9 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 					$opt = 'niv';
 				}
 			}
-			return $opt;
+
+			// Allow plugins/themes to override the options
+			return apply_filters( "dsgnwrks_bible_$index", $opt, self::$services );
 		}
 
 		return self::$opts;
@@ -168,8 +170,7 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 		if ( self::$url_pattern !== false )
 			return self::$url_pattern;
 
-		// Allow plugins/themes to override the service
-		$service = apply_filters( 'dsgnwrks_bible_service', self::opts( 'service' ), self::$services );
+		$service = self::opts( 'service' );
 		// Allow plugins/themes to override/add with their own service url patterns
 		self::$url_pattern = apply_filters( 'dsgnwrks_bible_service_url_pattern', self::$services[ $service ]['pattern'], $service, self::$services, self::opts() );
 		return self::$url_pattern;
@@ -179,7 +180,7 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 		$version = isset( self::$versions[ self::opts( 'version' ) ][ self::opts( 'service' ) ] )
 			? self::$versions[ self::opts( 'version' ) ][ self::opts( 'service' ) ]
 			: 'niv';
-		return apply_filters( 'dsgnwrks_bible_version', $version );
+		return $version;
 	}
 
 	public static function bgsearch( $attr ) {
@@ -189,13 +190,16 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 		if ( self::$js_included !== true )
 			add_action( 'wp_footer', array( __CLASS__, 'popupjs' ) );
 
-		$size = isset( self::$services[ self::opts( 'service' ) ]['size'] )
+		$size    = isset( self::$services[ self::opts( 'service' ) ]['size'] )
 			? self::$services[ self::opts( 'service' ) ]['size']
 			: array( 925, 950 );
-		$query = urlencode( $attr['passage'] );
-		$search = sprintf( self::service_link(), $query, self::version() );
+
+		$query   = urlencode( $attr['passage'] );
+		$search  = sprintf( self::service_link(), $query, self::version() );
 		$display = isset( $attr['display'] ) ? $attr['display'] : $attr['passage'];
-		return sprintf( '<a class="bible-gateway" href="%1$s" onclick="biblegwlinkpop(this.href,\'%2$s\',%3$s,%4$s)"" target="_blank">%5$s</a>', $search, esc_js( $attr['passage'] ), $size[0], $size[1], esc_html( $display ) );
+		$link    = sprintf( '<a class="bible-gateway" href="%1$s" onclick="biblegwlinkpop(this.href,\'%2$s\',%3$s,%4$s)"" target="_blank">%5$s</a>', $search, esc_js( $attr['passage'] ), $size[0], $size[1], esc_html( $display ) );
+
+		return $link;
 
 	}
 
