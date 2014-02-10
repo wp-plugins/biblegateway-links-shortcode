@@ -6,7 +6,7 @@ Description: Shortcode for linking Bible references to a BibleGateway page. Link
 Author URI: http://dsgnwrks.pro
 Author: Justin Sternberg
 Donate link: http://dsgnwrks.pro/give/
-Version: 0.1.5
+Version: 0.1.6
 */
 
 class DsgnWrks_Bible_Gateway_Shortcode {
@@ -73,7 +73,7 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 	 */
 	public function settings() {
 		// create admin page
-		add_submenu_page( 'options-general.php', self::$name, self::$name, 'manage_network_options', self::$btn, array( $this, 'settings_page' ) );
+		add_submenu_page( 'options-general.php', self::$name, self::$name, 'manage_options', self::$btn, array( $this, 'settings_page' ) );
 	}
 
 	/**

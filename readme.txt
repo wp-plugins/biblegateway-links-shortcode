@@ -9,9 +9,9 @@ Author URI: http://about.me/jtsternberg
 Author: Jtsternberg
 Donate link: http://j.ustin.co/rYL89n
 Requires at least: 3.2
-Tested up to: 3.8
-Stable tag: 0.1.5
-Version: 0.1.5
+Tested up to: 3.8.1
+Stable tag: 0.1.6
+Version: 0.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ function dsgnwrks_use_version_kjv() {
 
 == Changelog ==
 
+= 0.1.6 =
+* Bug fix: Settings page was only visible to Network Admins. Changed to be visible to standard Admins.
+
 = 0.1.5 =
 * Bug fixes, and filters available for each option.
 
@@ -76,6 +79,9 @@ function dsgnwrks_use_version_kjv() {
 
 
 == Upgrade Notice ==
+
+= 0.1.6 =
+* Bug fix: Settings page was only visible to Network Admins. Changed to be visible to standard Admins.
 
 = 0.1.5 =
 * Bug fixes, and filters available for each option.
