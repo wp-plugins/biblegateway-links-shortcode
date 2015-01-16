@@ -9,9 +9,9 @@ Author URI: http://about.me/jtsternberg
 Author: Jtsternberg
 Donate link: http://j.ustin.co/rYL89n
 Requires at least: 3.2
-Tested up to: 3.8.1
-Stable tag: 0.1.6
-Version: 0.1.6
+Tested up to: 4.2.0
+Stable tag: 0.1.7
+Version: 0.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,11 @@ function dsgnwrks_use_version_kjv() {
 
 == Changelog ==
 
+= 0.1.7 =
+* Bug fix: Links were opening two new browser tabs in some scenarios.
+* Bug fix: Update youversion's search url.
+* New Feature: Option to use the bible.org scripture highlighter. This will automatically search your page for scripture references and link them.
+
 = 0.1.6 =
 * Bug fix: Settings page was only visible to Network Admins. Changed to be visible to standard Admins.
 
@@ -79,6 +84,11 @@ function dsgnwrks_use_version_kjv() {
 
 
 == Upgrade Notice ==
+
+= 0.1.7 =
+* Bug fix: Links were opening two new browser tabs in some scenarios.
+* Bug fix: Update youversion's search url.
+* New Feature: Option to use the bible.org scripture highlighter. This will automatically search your page for scripture references and link them.
 
 = 0.1.6 =
 * Bug fix: Settings page was only visible to Network Admins. Changed to be visible to standard Admins.

@@ -6,7 +6,7 @@ Description: Shortcode for linking Bible references to a BibleGateway page. Link
 Author URI: http://dsgnwrks.pro
 Author: Justin Sternberg
 Donate link: http://dsgnwrks.pro/give/
-Version: 0.1.6
+Version: 0.1.7
 */
 
 class DsgnWrks_Bible_Gateway_Shortcode {
@@ -29,22 +29,27 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 			'size'    => array( 600, 750 ),
 		),
 		'youversion'   => array(
-			'pattern' => 'https://www.bible.com/search?q=%s.%s',
+			'pattern' => 'https://www.bible.com/search/bible?q=%s&category=bible&version_id=%s',
 			'name'    => 'YouVersion',
 			'size'    => array( 900, 600 ),
+		),
+		'highlighter'   => array(
+			'pattern' => '',
+			'name'    => 'Automatic Scripture Highlighter (http://bibles.org/pages/highlighter)',
+			'size'    => array(),
 		),
 	);
 	public static $versions    = array(
 		'niv' => array(
-			'youversion'   => 'niv',
+			'youversion'   => '111',
 			'biblegateway' => 'NIV',
 		),
 		'kjv' => array(
-			'youversion'   => 'kjv',
+			'youversion'   => '1',
 			'biblegateway' => 'KJV',
 		),
 		'esv' => array(
-			'youversion'   => 'esv',
+			'youversion'   => '59',
 			'biblegateway' => 'ESV',
 		),
 	);
@@ -85,7 +90,7 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 		<div class="wrap">
 			<?php screen_icon(); ?>
 			<h2><?php echo self::$name; ?></h2>
-			<form class="" method="post" action="options.php">
+			<form method="post" action="options.php">
 				<?php settings_fields( self::$btn ); ?>
 				<?php do_settings_sections( self::$btn ); ?>
 				<p class="submit">
@@ -121,14 +126,14 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 	}
 
 	public static function opts( $index = '' ) {
-		self::$opts = !empty( self::$opts ) ? self::$opts : get_option( self::$btn );
+		self::$opts = ! empty( self::$opts ) ? self::$opts : get_option( self::$btn );
 
 		if ( $index ) {
 			$opt = isset( self::$opts[$index] ) ? self::$opts[$index] : false;
-			if ( !$opt ) {
-				if ( $index == 'service' ) {
+			if ( ! $opt ) {
+				if ( 'service' == $index ) {
 					$opt = 'biblegateway';
-				} elseif ( $index == 'version' ) {
+				} elseif ( 'version' == $index ) {
 					$opt = 'niv';
 				}
 			}
@@ -153,8 +158,9 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 	public function quicktag_button_script() {
 		$current = get_current_screen();
 
-		if ( !isset( $current->parent_base ) || $current->parent_base != 'edit' )
+		if ( ! isset( $current->parent_base ) || 'edit' != $current->parent_base ) {
 			return;
+		}
 		wp_enqueue_script( self::$btn );
 	}
 
@@ -167,8 +173,9 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 	}
 
 	public static function service_link() {
-		if ( self::$url_pattern !== false )
+		if ( false !== self::$url_pattern ) {
 			return self::$url_pattern;
+		}
 
 		$service = self::opts( 'service' );
 		// Allow plugins/themes to override/add with their own service url patterns
@@ -184,33 +191,63 @@ class DsgnWrks_Bible_Gateway_Shortcode {
 	}
 
 	public static function bgsearch( $attr ) {
-		if ( !isset( $attr['passage'] ) )
+		if ( ! isset( $attr['passage'] ) ) {
 			return;
+		}
 
-		if ( self::$js_included !== true )
-			add_action( 'wp_footer', array( __CLASS__, 'popupjs' ) );
+		$display = isset( $attr['display'] ) ? $attr['display'] : $attr['passage'];
 
-		$size    = isset( self::$services[ self::opts( 'service' ) ]['size'] )
+		if ( ! self::$js_included ) {
+			add_action( 'wp_footer', array( __CLASS__, 'footer_js' ), 55 );
+		}
+
+		if ( 'highlighter' == self::opts( 'service' ) ) {
+			return sprintf( '<cite class="bibleref" title="%1$s">%2$s</cite>', esc_attr( $attr['passage'] ), esc_html( $display ) );
+		}
+
+		$size   = isset( self::$services[ self::opts( 'service' ) ]['size'] )
 			? self::$services[ self::opts( 'service' ) ]['size']
 			: array( 925, 950 );
 
-		$query   = urlencode( $attr['passage'] );
-		$search  = sprintf( self::service_link(), $query, self::version() );
-		$display = isset( $attr['display'] ) ? $attr['display'] : $attr['passage'];
-		$link    = sprintf( '<a class="bible-gateway" href="%1$s" onclick="biblegwlinkpop(this.href,\'%2$s\',%3$s,%4$s)"" target="_blank">%5$s</a>', $search, esc_js( $attr['passage'] ), $size[0], $size[1], esc_html( $display ) );
+		$query  = urlencode( $attr['passage'] );
+		$search = sprintf( self::service_link(), $query, self::version() );
+		$link   = sprintf( '<a class="bible-gateway" href="%1$s" onclick="biblegwlinkpop(this.href,\'%2$s\',%3$s,%4$s);return false;" target="_blank">%5$s</a>', $search, esc_js( $attr['passage'] ), $size[0], $size[1], esc_html( $display ) );
 
 		return $link;
 
 	}
 
-	public static function popupjs() {
-		?>
-		<script type="text/javascript">
-		function biblegwlinkpop(url, title, w, h) {
-			var left = (window.innerWidth/2)-(w/2); var top = (window.innerHeight/2)-(h/2);
-			return window.open(url, title, 'width='+w+',height='+h+',top='+top+',left='+left); }
-		</script>
-		<?php
+	public static function footer_js() {
+		if ( 'highlighter' == self::opts( 'service' ) ) {
+			?>
+			<script id="bw-highlighter-config" data-version="<?php echo strtoupper( self::opts( 'version' ) ); ?>">
+			// http://bibles.org/pages/highlighter
+			// https://wordpress.org/plugins/biblegateway-links-shortcode/
+			(function(w, d, s, e, id) {
+			  w._bhparse = w._bhparse || [];
+			  function l() {
+			    if (d.getElementById(id)) return;
+			    var n = d.createElement(s), x = d.getElementsByTagName(s)[0];
+			    n.id = id; n.async = true; n.src = '//bibles.org/linker/js/client.js';
+			    x.parentNode.insertBefore(n, x);
+			  }
+			  (w.attachEvent) ? w.attachEvent('on' + e, l) : w.addEventListener(e, l, false);
+			})(window, document, 'script', 'load', 'bw-highlighter-src');
+			</script>
+			<?php
+		} else {
+			?>
+			<script type="text/javascript">
+			// https://wordpress.org/plugins/biblegateway-links-shortcode/
+			function biblegwlinkpop(url, title, w, h) {
+				var left = (window.innerWidth/2)-(w/2); var top = (window.innerHeight/2)-(h/2);
+				window.open(url, title, 'width='+w+',height='+h+',top='+top+',left='+left);
+				return false;
+			}
+			</script>
+			<?php
+		}
+
 		self::$js_included = true;
 	}
 
